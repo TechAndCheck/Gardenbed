@@ -14,7 +14,7 @@ module Gardenbed
     end
 
     def character_for_keypress(keypress)
-      Gardenbed.instance.logger.info("Pressed key #{keypress}")
+      #Gardenbed.instance.logger.info("Pressed key #{keypress}")
       if keypress == 27
         @current_modifier_key = :alt
         return

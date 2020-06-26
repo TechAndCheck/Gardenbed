@@ -56,9 +56,9 @@ module Gardenbed
         loop do
           return if @active_window.nil?
 
-          key = @active_window.wait_for_key_char
+          key = @tracking_window.wait_for_key_char
           character = Gardenbed.instance.key_manager.character_for_keypress(key) unless key.nil?
-          @active_window.update_string_value += character unless character.nil?
+          @active_window.update_string_value(character) unless character.nil?
         end
       end
     end
