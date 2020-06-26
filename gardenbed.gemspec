@@ -30,14 +30,17 @@ Gem::Specification.new do |spec|
   spec.executables   = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
   spec.require_paths = ['lib']
 
+  spec.add_dependency 'curses'
+  spec.add_dependency 'logger'
+
   spec.add_development_dependency 'bundler', '~> 2.0'
   spec.add_development_dependency 'rake', '~> 10.0'
-  spec.add_development_dependency 'rspec', '~> 3.0'
-  spec.add_development_dependency 'rspec-nc'
+  spec.add_development_dependency 'minitest'
   spec.add_development_dependency 'guard'
-  spec.add_development_dependency 'guard-rspec'
   spec.add_development_dependency 'pry'
   spec.add_development_dependency 'pry-remote'
   spec.add_development_dependency 'pry-nav'
+  spec.add_development_dependency 'pry-byebug'
+  spec.add_development_dependency 'byebug'
   spec.add_development_dependency 'rubocop'
 end
