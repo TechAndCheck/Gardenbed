@@ -1,0 +1,39 @@
+# A few things to remember
+# 1. Limit to 72 characters wide
+#    (all the separators are this long for reference)
+# 2. All lines starting with the hash sign '#' are ignored
+# Fill in each of the sections below as described.
+#-----------------------------------------------------------------------
+#
+# Put the subject of this commit below, with the following restrictions:
+# 1. Limit it to 50 characters (The separator after this list is 50
+#    characters long)
+# 2. Don't use a period
+# 3. Capitalize the first letter
+# 4. Use the imperative mood ("Spoken or written as if giving a command
+#    or instruction")
+#-------------------------------------------------
+
+
+# Next goes the description. This is where you describe the features,
+# but don't bother talking about direct code, that's what you should be
+# commenting in the code for. Otherwise, feel free to use list,
+# [markdown](https://www.markdownguide.org/), etc.
+**Description**
+#-----------------------------------------------------------------------
+
+# Please include steps for testing here. Use `N/A` if it doesn't make
+# sense (documentation updates for instance.)
+🚨**Testing:**
+#-----------------------------------------------------------------------
+
+
+# After that is a list of issues (with links to Github, or wherever)
+# Such as "[#45](https://github.com/TechAndCheck/factstream-backend/issues/13)
+**Effects**
+#-----------------------------------------------------------------------
+# Affects [#](https://github.com/)
+
+
+# If you have any further notes or attributions you can add them below
+#-----------------------------------------------------------------------
