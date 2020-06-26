@@ -28,6 +28,9 @@ module Gardenbed
       UPDATE_TYPES = { append: 0, replace: 1 }.freeze
     end
 
+    # This is a struct to indicate a point in the window
+    Point = Struct.new(:x, :y)
+
     attr_reader :border_vertical, :border_horizontal
     attr_reader :cursor_x, :cursor_y
 
@@ -41,11 +44,14 @@ module Gardenbed
 
       @border_vertical = ' '
       @border_horizontal = ' '
-      @cursor_x = 0
-      @cursor_y = 0
+
+      # The current location of the cursor
+      @cursor_point = Point.new(0, 0)
+      # The "start" point of the cursor, usually the start of the line
+      @cursor_zero_point = Point.new(0, 0)
+
       @string_value = ''
       @data_hash = {}
-      @update_string_value = ''
 
       # Sets up the queue for updates
       @update_queue = Queue.new
@@ -97,20 +103,31 @@ module Gardenbed
     def border_vertical=(symbol)
       @border_vertical = symbol
       set_border
+
+      # Set the cursor zero point to accommodate the border difference
+      @cursor_zero_point = Point.new(@cursor_zero_point.x, 1)
       redraw
     end
 
     def border_horizontal=(symbol)
       @border_horizontal = symbol
       set_border
+
+      # Set the cursor zero point to accommodate the border difference
+      @cursor_zero_point = Point.new(1, @cursor_zero_point.y)
       redraw
     end
 
-    def set_cursor_position(x_pos, y_pos)
-      @cursor_x = x_pos
-      @cursor_y = y_pos
-      @window.setpos x_pos, y_pos
+    # Set where the cursor should be in the line
+    def cursor_point=(point)
+      @cursor_point = point
+      @window.setpos point.x, point.y
       redraw
+    end
+
+    # Reset the cursor point to the cursor zero point (usually the start of the line)
+    def reset_cursor_point
+      self.cursor_point = @cursor_zero_point
     end
 
     def string_value=(string_value)
@@ -118,7 +135,8 @@ module Gardenbed
 
       clear_string_value
       @string_value = string_value.to_s
-      set_cursor_position @cursor_x, @cursor_y
+      self.cursor_point = @cursor_point
+
       @window.addstr @string_value
       redraw
     end

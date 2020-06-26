@@ -67,6 +67,8 @@ module Gardenbed
       Thread.new do
         loop do
           @windows.each(&:update)
+          @active_window&.reset_cursor_point
+
           sleep CLOCKSPEED
         end
       end
