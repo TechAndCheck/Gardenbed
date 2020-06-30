@@ -5,6 +5,7 @@ require 'gardenbed/screen'
 require 'gardenbed/version'
 require 'gardenbed/window'
 require 'gardenbed/logger'
+require 'gardenbed/flowerbox'
 
 require 'curses'
 require 'singleton'
@@ -18,7 +19,7 @@ module Gardenbed
 
   def self.start
     logger.info 'Planting Gardenbed...'
-    Planter.instance.start
+    Application.instance.start
   end
 
   def self.new_window(height, width, x_pos, y_pos)
@@ -38,7 +39,7 @@ module Gardenbed
   end
 
   # Initial Holder for everything else
-  class Planter
+  class Application
     include Singleton
 
     attr_reader :logger
