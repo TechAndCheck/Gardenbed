@@ -4,9 +4,11 @@ require 'gardenbed/key_manager'
 require 'gardenbed/screen'
 require 'gardenbed/version'
 require 'gardenbed/window'
+require 'gardenbed/logger'
 
 require 'curses'
 require 'singleton'
+require 'logger'
 
 # Module holding all the stuff
 module Gardenbed
@@ -15,28 +17,28 @@ module Gardenbed
   class Error < StandardError; end
 
   def self.start
-    @screen = Screen.new
-    @screen
+    logger.info 'Planting Gardenbed...'
+    Planter.instance.start
   end
 
   def self.new_window(height, width, x_pos, y_pos)
-    @screen.new_window height, width, x_pos, y_pos
+    Planter.instance.new_window height, width, x_pos, y_pos
   end
 
-  def self.new_key_manager
-    KeyManager.new
+  def self.key_manager
+    Planter.instance.key_manager
   end
 
   def self.active_window=(active_window)
-    @screen.active_window = active_window
+    Planter.instance.active_window = active_window
   end
 
   def self.active_window
-    @screen.active_window
+    Planter.instance.active_window
   end
 
   # Initial Holder for everything else
-  class Gardenbed
+  class Planter
     include Singleton
 
     attr_reader :logger
@@ -45,12 +47,25 @@ module Gardenbed
     attr_reader :key_manager
     attr_accessor :run_signal
 
-    def self.instance
-      new
-    end
-
     def start
       @screen = Screen.new
+    end
+
+    def self.new_window(height, width, x_pos, y_pos)
+      @screen.new_window height, width, x_pos, y_pos
+    end
+
+    def self.key_manager
+      @key_manager = KeyManager.new if @key_manager.nil?
+      @key_manager
+    end
+
+    def self.active_window=(active_window)
+      @screen.active_window = active_window
+    end
+
+    def self.active_window
+      @screen.active_window
     end
 
     def halt!
@@ -59,13 +74,6 @@ module Gardenbed
     end
 
     private
-
-    def new
-      file = File.open('foo.log', File::WRONLY | File::APPEND)
-      # To create new logfile, add File::CREAT like:
-      # file = File.open('foo.log', File::WRONLY | File::APPEND | File::CREAT)
-      @logger = Logger.new(file)
-    end
 
     def initialize
       @run_signal = SIGNALS[:run]
