@@ -11,7 +11,7 @@ require 'gardenbed/leaf'
 require 'curses'
 require 'singleton'
 require 'logger'
-require 'pry-remote'
+require 'byebug/core'
 
 # Module holding all the stuff
 module Gardenbed
