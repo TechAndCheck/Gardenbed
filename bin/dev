@@ -1,0 +1,14 @@
+#!/bin/bash
+#
+# A script to set up Gardenbed development. This starts up a tmux session with
+# one session running the server and one running the byebug server so you can
+# actually use a debugger.
+#
+# Note that this isn't the most perfect solution: you might have to restart the
+# byebug server if it starts before the server starts.
+
+tmux new-session -d -s gardenbed
+tmux send 'ruby bin/start' ENTER;
+tmux split-window; # split the detached tmux session
+tmux send 'bash bin/debugger' ENTER; # send 2nd command 'htop -t' to 2nd pane.
+tmux a;

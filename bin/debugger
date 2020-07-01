@@ -1,0 +1,15 @@
+#!/bin/bash
+#
+# This starts up the Byebug remote debugger. The server will start the debug
+# server on start, wait three seconds for this to attach, and then keep going.
+# This helps us debug things that go wrong during boot.
+
+echo ""
+echo "We're going to keep trying until we can properly attach to the debugger server."
+echo "-----------------------"; echo ""
+
+bundle exec byebug -R localhost:1048
+while [ $? -ne 0 ]
+do
+  bundle exec byebug -R localhost:1048
+done

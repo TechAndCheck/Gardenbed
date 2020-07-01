@@ -1,0 +1,28 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+# Starts the server, bootstrapping everything, making sure the initial files are all set up correctly.
+# Run this with `ruby bin/start`
+
+require 'rubygems'
+require 'bundler/setup'
+Bundler.require(:default)
+
+# You can add fixtures and/or initialization code here to make experimenting
+# with your gem easier. You can also use a different console, if you like.
+
+# Try to find `app.rb` and run it's `start` command
+app_file_name = './app.rb'
+raise 'No `app.rb` file found in root, failing out.' unless File.exist?(File.dirname(app_file_name))
+
+require './app.rb'
+
+begin
+  Sapling.class
+rescue NameError
+  raise 'Expected `app.rb` to define `class Application`'
+end
+
+# App entry point
+@application = Sapling.new
+raise 'Expected `Application` to inherit from `Planter`' unless @application.is_a? Gardenbed::FlowerBox
