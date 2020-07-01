@@ -9,6 +9,3 @@ gem 'gardenbed', path: './lib/gardenbed'
 
 # Development tools
 gem 'byebug'
-gem 'pry'
-gem 'pry-byebug'
-gem 'pry-remote'
