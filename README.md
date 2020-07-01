@@ -30,17 +30,17 @@ This is supposed to contain your whole application, everything will eventually r
 What this means is some basic set up is necessary (eventually this will all be automated with generators ala Rails)
 
 ### Prerequisites
-Mac:
+#### Mac:
 **Note:** This has only been installed on MacOS 10.15.1, but it'll probably work on any POSIX system that can link against `ncurses`
 1. Make sure you have [Homebrew](https://brew.sh/), the package manager for MacOS (think Apt or Yum).
    If you don't, follow the instructions on the home page of the project to install
 1. Install `ncurses` by doing the following `brew install ncurses`
 1. Make sure you have Ruby 2.7.1 installed (2.6 probably works fine, but it's non-tested). I usually do this with [rvm](https://rvm.io/)
 
-Linux:
+#### Linux:
 Probably the same as Mac except with your distro's flavor of installing `ncurses`.
 
-For now:
+### For now
 1. Clone this repo `git clone https://github.com/techandcheck/gardenbed`
 1. Copy `app.rb.demo` and rename it to `app.rb`
 1. Run `bundle install`
