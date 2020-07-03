@@ -14,7 +14,7 @@ module Gardenbed
     end
 
     def character_for_keypress(keypress)
-      Gardenbed.logger.info("Pressed key #{keypress}")
+      # Based off this https://man7.org/linux/man-pages/man7/ascii.7.html
       if keypress == 27
         @current_modifier_key = :alt
         return
@@ -29,9 +29,10 @@ module Gardenbed
                 when Curses::Key::DOWN
                   'Down Key'
                 when 127
-                  'Back!!!!'
+                  # Curses::Key::Backspace doesn't seem to get right (in my terminal at least)
+                  Curses::Key::BACKSPACE
                 when Curses::Key::DC
-                  'Deleting Forward!!!'
+                  Curses::Key::DC
                 when 10
                   'Enter'
                 when ?\C-s

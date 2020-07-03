@@ -15,6 +15,13 @@ GEM
     eventmachine (1.2.7)
     hashdiff (1.0.1)
     logger (1.4.2)
+    tty-cursor (0.7.1)
+    tty-reader (0.8.0)
+      tty-cursor (~> 0.7)
+      tty-screen (~> 0.8)
+      wisper (~> 2.0)
+    tty-screen (0.8.0)
+    wisper (2.0.1)
 
 PLATFORMS
   ruby
@@ -22,6 +29,7 @@ PLATFORMS
 DEPENDENCIES
   byebug
   gardenbed!
+  tty-reader
 
 BUNDLED WITH
    2.1.4

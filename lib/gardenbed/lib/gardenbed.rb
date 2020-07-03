@@ -7,6 +7,7 @@ require 'gardenbed/window'
 require 'gardenbed/logger'
 require 'gardenbed/flowerbox'
 require 'gardenbed/leaf'
+require 'gardenbed/text_field'
 
 require 'curses'
 require 'singleton'
@@ -18,6 +19,9 @@ module Gardenbed
   SIGNALS = { run: 0, halt: 1 }.freeze
 
   class Error < StandardError; end
+
+  # This is a struct to indicate a point in a window or on the screen
+  Point = Struct.new(:x, :y)
 
   def self.start
     logger.info 'Planting Gardenbed...'
@@ -63,8 +67,7 @@ module Gardenbed
     end
 
     def key_manager
-      @key_manager = KeyManager.new if @key_manager.nil?
-      @key_manager
+      @key_manager ||= KeyManager.new
     end
 
     def active_window=(active_window)
@@ -88,7 +91,7 @@ module Gardenbed
     end
 
     def setup_keymapping
-      @key_manager = KeyManager.new
+      @key_manager ||= KeyManager.new
       @key_manager.register_key_mapping 'A-n' do
         halt!
       end

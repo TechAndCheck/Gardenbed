@@ -18,6 +18,9 @@ module Gardenbed
   # Internally this is all done using the `@update_queue` `Queue` object, so if multiple changes are
   # written at any given time they're all run (more or less, there's going to be optimizations so that
   # not everything is run if eventually one of the changes overwrites the previous ones)
+  #
+  #
+  # NOTE! THis is how to do cursors https://stackoverflow.com/questions/40164331/multiple-cursors-in-curses
   class Window
     SIGNALS = { run: 0, halt: 1 }.freeze
 
@@ -28,13 +31,7 @@ module Gardenbed
       UPDATE_TYPES = { append: 0, replace: 1 }.freeze
     end
 
-    # This is a struct to indicate a point in the window
-    Point = Struct.new(:x, :y)
-
     attr_reader :border_vertical, :border_horizontal
-    attr_reader :cursor_x, :cursor_y
-
-    attr_reader :string_value
     attr_reader :template
 
     def initialize(name, height, width, x_pos, y_pos)
@@ -56,6 +53,7 @@ module Gardenbed
 
       @string_value = ''
       @data_hash = {}
+      @text_field = TextField.new
 
       # Sets up the queue for updates
       @update_queue = Queue.new
@@ -82,12 +80,6 @@ module Gardenbed
           raise 'Incorrect update type provided to update queue.'
         end
       end
-
-      redraw
-    end
-
-    def add_test_string
-      self.string_value = 'Test 123'
     end
 
     def update_data(data_hash)
@@ -98,7 +90,8 @@ module Gardenbed
     end
 
     def update_string_value(string)
-      @update_queue << UpdateQueueObject.new(string, UPDATE_TYPES[:append])
+      @text_field.append string
+      @update_queue << UpdateQueueObject.new(@text_field.content, UPDATE_TYPES[:replace])
     end
 
     def border_vertical=(symbol)
@@ -107,7 +100,6 @@ module Gardenbed
 
       # Set the cursor zero point to accommodate the border difference
       @cursor_zero_point = Point.new(@cursor_zero_point.x, 1)
-      byebug
       redraw
     end
 
@@ -132,12 +124,15 @@ module Gardenbed
       self.cursor_point = @cursor_zero_point
     end
 
-    def string_value=(string_value)
-      return if string_value == @string_value
+    def string_value=(new_string_value)
+      # TODO: We eventually don't want to refresh the window if nothing's changed.
+      # However, this comparison (commented out below) doesn't seem to work when deletion is happening
+      # this is weird, but can be turned non-blocking by ignoring it.
+      # return if new_string_value == @string_value
 
       clear_string_value
-      @string_value = string_value.to_s
-      self.cursor_point = @cursor_point
+      @string_value = new_string_value
+      self.cursor_point = @cursor_zero_point
 
       @window.addstr @string_value
       redraw
@@ -145,9 +140,9 @@ module Gardenbed
 
     def clear_string_value
       @string_value = ''
-      @window.clear
+      @window.erase
       set_border
-      # We only want to clear, not do anything else, so do a raw refresh.
+      # We only want to erase, not do anything else, so do a raw refresh.
       @window.refresh
     end
 

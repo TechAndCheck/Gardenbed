@@ -9,3 +9,6 @@ gem 'gardenbed', path: './lib/gardenbed'
 
 # Development tools
 gem 'byebug'
+
+# A tool for managing keyboards, because Unicode sucks and someone else can deal with it
+gem 'tty-reader'
