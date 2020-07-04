@@ -1,12 +1,13 @@
 # frozen_string_literal: true
 require 'curses'
+
 module Gardenbed
   # Manage cursor position, backspace, etc.
   class TextField
     # This is a struct to indicate a point in the window
     Point = Struct.new(:x, :y)
 
-    attr_reader :content
+    attr_reader :content, :cursor
 
     # A hash of special keys and functions for when we're writing stuff
     # mostly refers to this: https://man7.org/linux/man-pages/man7/ascii.7.html / http://www.asciitable.com/
@@ -14,11 +15,14 @@ module Gardenbed
     SPECIAL_KEYS = {
       "#{Curses::Key::BACKSPACE}": :backspace,
       "#{Curses::Key::DC}": :forward_delete,
+      "#{Curses::Key::LEFT}": :left,
+      "#{Curses::Key::RIGHT}": :right,
       '\e': :escape
     }.freeze
 
     def initialize
-      @cursor_point = Point.new(0, 0)
+      # Create a cursor if the leaf if nil
+      @cursor = Cursor.new
       @content = ''
     end
 
@@ -27,9 +31,13 @@ module Gardenbed
       if SPECIAL_KEYS.key? character_symbol
         send SPECIAL_KEYS[character_symbol]
       else
-        @content += character
-        advance_cursor(character.size)
+        @content = @content.dup.insert @cursor.position.x, character
+        @cursor.advance(character.size)
       end
+    end
+
+    def cursor_color
+      @cursor.color
     end
 
     private
@@ -38,32 +46,26 @@ module Gardenbed
 
     # Delete character one behind the cursor, if it's at the beginning do nothing
     def backspace
-      @content.slice!(@cursor_point.x - 1)
-      retreat_cursor
+      @content.slice!(@cursor.position.x - 1)
+      @cursor.retreat
     end
 
     # Delete the character under the cursor
     def forward_delete
-      @content.slice!(@cursor_point.x)
+      @content.slice!(@cursor.position.x)
+    end
+
+    # Move the cursor left
+    def left
+      @cursor.retreat
+    end
+
+    # Move the cursor right
+    def right
+      return if cursor.position.x + 1 > @content.length
+      @cursor.advance
     end
 
     def escape; end
-
-    # Cursor management
-
-    # Move the cursor one spot forward. Eventually, when we get to multi line mode, this will get
-    # more complicated
-    def advance_cursor(distance = 1)
-      @cursor_point.x += distance
-    end
-
-    # Move the cursor one spot backwards. Eventually, when we get to multi line mode, this will get
-    # more complicated
-    def retreat_cursor(distance = 1)
-      # Don't let the cursor get below zero
-      return if @cursor_point.x < distance
-
-      @cursor_point.x -= distance
-    end
   end
 end

@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'erb'
+require 'curses'
 
 module Gardenbed
   # Manager for a Curses Window
@@ -48,12 +49,12 @@ module Gardenbed
 
       # The current location of the cursor
       @cursor_point = Point.new(0, 0)
-      # The "start" point of the cursor, usually the start of the line
+      # The "start" point of the drawing cursor, usually the start of the line
       @cursor_zero_point = Point.new(0, 0)
 
       @string_value = ''
       @data_hash = {}
-      @text_field = TextField.new
+      @text_field = TextField.new if @leaf.nil?
 
       # Sets up the queue for updates
       @update_queue = Queue.new
@@ -134,7 +135,16 @@ module Gardenbed
       @string_value = new_string_value
       self.cursor_point = @cursor_zero_point
 
-      @window.addstr @string_value
+      if @text_field.nil?
+        @window.addstr @string_value
+      else
+        @color = @text_field.cursor_color
+        @string_value += ' '
+        @window.addstr @string_value[...@text_field.cursor.position.x]
+        @window.attron(Curses.color_pair(@color)) { @window.addstr @string_value[@text_field.cursor.position.x] }
+        @window.addstr @string_value[(@text_field.cursor.position.x + 1)..]
+      end
+
       redraw
     end
 

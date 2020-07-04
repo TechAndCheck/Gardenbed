@@ -8,6 +8,7 @@ require 'gardenbed/logger'
 require 'gardenbed/flowerbox'
 require 'gardenbed/leaf'
 require 'gardenbed/text_field'
+require 'gardenbed/cursor'
 
 require 'curses'
 require 'singleton'

@@ -20,10 +20,6 @@ module Gardenbed
         return
       else
         value = case keypress
-                when Curses::Key::LEFT
-                  'Left Key'
-                when Curses::Key::RIGHT
-                  'Right Key'
                 when Curses::Key::UP
                   'Up Key'
                 when Curses::Key::DOWN
